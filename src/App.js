@@ -1,11 +1,6 @@
-
-import './App.css';
-import { Dashboard } from './components/Dashboard';
+import "./App.css";
+import { Dashboard } from "./components/Dashboard";
 
 export const App = () => {
-  return (
-    <Dashboard />
-  );
+  return <Dashboard />;
 };
-
-
