@@ -1,5 +1,5 @@
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 const api = new WooCommerceRestApi({
   url: "https://salonathome.in",
@@ -20,7 +20,7 @@ export const FetchFromWc = () => {
       })
       .then((response) => {
         if (response.status === 200) {
-          response.data &&
+          response.data &&  
             response.data.map((order) => {
               return addData(order);
             });
@@ -71,7 +71,7 @@ export const FetchFromWc = () => {
       },
     };
     axios
-      .post("http://localhost:5000/order/add", myobj)
+      .post(`${BASE_URI}order/add`, myobj)
       .then((res) => console.log(res.data));
   };
   return <div></div>;

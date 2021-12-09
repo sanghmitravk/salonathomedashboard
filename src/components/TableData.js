@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { UserForm } from "./UserForm";
+import { BASE_URI } from "./config";
 
 const style = {
   position: "absolute",
@@ -30,6 +31,7 @@ const style = {
 
 export const TableData = () => {
   const [orders, setOrders] = useState([]);
+  const [currentOrder, setCurrentOrder] = useState([]);
 
   useEffect(() => {
     fetchOrders();
@@ -71,13 +73,12 @@ export const TableData = () => {
   };
 
   const fetchOrders = () => {
-    axios.get("http://localhost:5000/order").then((res) => setOrders(res.data));
+    axios.get(`${BASE_URI}order`).then((res) => setOrders(res.data));
   };
 
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
 
-  const handleOpenUpdate = () => setOpenUpdate(true);
   const handleCloseUpdate = () => setOpenUpdate(false);
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
@@ -197,25 +198,38 @@ export const TableData = () => {
                           );
                         })}
                         <TableCell key={order.id}>
-                          <Button onClick={handleOpenUpdate}>
+                          <Button
+                            onClick={() => (
+                              setOpenUpdate(true),
+                              setCurrentOrder(order),
+                              console.log("currentOrder", currentOrder)
+                            )}
+                          >
                             <EditIcon style={{ cursor: "pointer" }} />
                           </Button>
-                          <Modal
-                            open={openUpdate}
-                            onClose={handleCloseUpdate}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                          >
-                            <Box sx={style}>
-                              <UserForm initialValue={order} request="update" />
-                            </Box>
-                          </Modal>
+                          {index === 0 && (
+                            <Modal
+                              open={openUpdate}
+                              onClose={handleCloseUpdate}
+                              aria-labelledby="modal-modal-title"
+                              aria-describedby="modal-modal-description"
+                            >
+                              <Box sx={style}>
+                                {openUpdate && (
+                                  <UserForm
+                                    initialValue={currentOrder}
+                                    request="update"
+                                  />
+                                )}
+                              </Box>
+                            </Modal>
+                          )}
                         </TableCell>
                         <TableCell key={order.order_key}>
                           <a
                             rel="noreferrer"
                             target="_blank"
-                            href={`https://api.whatsapp.com/send?phone=91${order.billing.phone}&text=${order.id}%0A${order.billing.first_name}%0A${order.iconic_delivery_meta.date}%0A${order.billing.address_1}%0A${order.billing.address_2}%0A${order.iconic_delivery_meta.timeslot}%0A${order.total}%0Ahttps://salonathome.in/checkout/order-received/${order.id}/?key=${order.order_key}%0A*${order.line_items.name}*%0A${order.line_items.display_value}`}
+                            href={`https://api.whatsapp.com/send?phone=91${order.billing.phone}&text=${order.id}%0A${order.billing.first_name}%0A${order.iconic_delivery_meta.date}%0A${order.billing.address_1}%0A${order.billing.address_2}%0A${order.iconic_delivery_meta.timeslot}%0A${order.total}%0Ahttps://salonathome.in/checkout/order-received/${order.id}/?key=${order.order_key}%0A*${order.line_items.name}%0A${order.line_items.display_value}`}
                           >
                             <WhatsAppIcon style={{ cursor: "pointer" }} />
                           </a>

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import axios from "axios";
-import moment from "moment";
+import { BASE_URI } from './config';
 
 export const UserForm = (initialValue) => {
   console.log("props value", initialValue.initialValue);
@@ -98,7 +98,7 @@ export const UserForm = (initialValue) => {
         const updateData = () => {
           axios
             .post(
-              `http://localhost:5000/update/${initialValue.initialValue._id}`,
+              `${BASE_URI}update/${initialValue.initialValue._id}`,
               content
             )
             .then((res) => console.log(res.data));
@@ -108,7 +108,7 @@ export const UserForm = (initialValue) => {
 
         const addData = () => {
           axios
-            .post("http://localhost:5000/order/add", content)
+            .post(`${BASE_URI}order/add`, content)
             .then((res) => console.log(res.data));
         };
         method === "add" ? addData() : updateData();
@@ -229,8 +229,9 @@ export const UserForm = (initialValue) => {
                     label="Status"
                     onChange={handleChange}
                   >
-                    <MenuItem value="processing">Processing</MenuItem>
                     <MenuItem value="confirmed">Confirmed</MenuItem>
+                    <MenuItem value="processing">Processing</MenuItem>
+                    <MenuItem value="on-hold">On Hold</MenuItem>
                     <MenuItem value="cancelled">Cancelled</MenuItem>
                   </Select>
                 </FormControl>
